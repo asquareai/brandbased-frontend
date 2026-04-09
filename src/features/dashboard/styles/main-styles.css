@@ -570,12 +570,12 @@ box-sizing: border-box; /* Ensures padding doesn't affect the width/height */
     left: 0;
     right: 0;
     text-align: center;
-    width: 500px;
+    width: 650px;
 }
 @media(max-width:840px)
 {
     #screen-1-inputs-login {
-        margin-bottom: -40px;
+        margin-bottom: -10px;
         bottom:0px;
         padding-bottom: 500px;
         width: unset;
@@ -878,12 +878,12 @@ display: none;
     left: 0;
     right: 0;
     text-align: center;
-    margin-top: -150px;
+    margin-top: -130px;
 }
 @media(max-width:840px)
 {
     .join-text {
-        margin-top: -170px;
+        margin-top: -154px;
     }  
 }
 

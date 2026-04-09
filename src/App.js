@@ -3,6 +3,8 @@ import SignupPage from './features/auth/SignupPage';
 import LoginPage from './features/auth/LoginPage';
 import DashboardPage from './features/dashboard/DashboardPage'; // Import your new page
 import ForgotPassword from './features/auth/ForgotPassword';
+import LandingPage from './features/dashboard/LandingPage';
+import LogoutPage from './features/auth/LogoutPage';
 function App() {
   return (
     <Router>
@@ -11,7 +13,8 @@ function App() {
         <Route path="/signup" element={<SignupPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
+        <Route path="/landing" element={<LandingPage />} />
+        <Route path="/logout" element={<LogoutPage />} />
         {/* Protected Dashboard Route */}
         <Route 
           path="/dashboard" 

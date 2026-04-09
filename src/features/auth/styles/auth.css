@@ -23,7 +23,7 @@ body {
 /* Desktop Left Panel */
 .left-panel {
     flex: 1;
-    background: #ffffffa6;
+    background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -557,13 +557,24 @@ animation: slideInRight 1.2s ease-out 0.5s forwards, /* start after 0.5s delay *
     to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
 }
 
-/* Show mobile version on small screens */
+/* Update this block in your CSS */
 @media (max-width: 1024px) {
     .container {
+        display: flex;         /* Change from none to flex */
+        flex-direction: column; /* Stack vertically on mobile */
+        height: auto;          /* Allow content to scroll */
+        min-height: 100vh;
+    }
+
+    /* Hide the right panel (video/image) on mobile to save space */
+    .right-panel {
         display: none;
     }
-    .mobile-container {
-        display: flex;
+
+    .left-panel {
+        width: 100%;
+        padding: 20px;
+        background: transparent; /* Better for your glassmorphism theme */
     }
 }
 
