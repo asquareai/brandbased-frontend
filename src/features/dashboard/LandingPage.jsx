@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './styles/main-styles.css';
+import './styles/dashboard.css';
 import './styles/animate.css';
 
 const LandingPage = () => {

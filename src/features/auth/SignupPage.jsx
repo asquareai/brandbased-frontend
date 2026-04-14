@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import AuthLayout from '../../layouts/AuthLayout';
 import api from '../../api/axios';
 
+console.log("Checking API URL:", process.env.REACT_APP_API_URL);
+
 const SignupPage = () => {
     const [step, setStep] = useState(1);
     const [email, setEmail] = useState('');
@@ -69,10 +71,18 @@ const SignupPage = () => {
 
     const handleCompleteSignup = async (e) => {
         e.preventDefault();
+
+        // 1. Client-side validation
         if (password !== passwordConfirm) {
             alert("Passwords do not match");
             return;
         }
+
+        if (password.length < 8) {
+            alert("Password must be at least 8 characters");
+            return;
+        }
+
         setLoading(true);
         try {
             const response = await api.post('/auth/signup/complete', {
@@ -80,12 +90,32 @@ const SignupPage = () => {
                 password,
                 password_confirmation: passwordConfirm
             });
+
+            // 2. Check for the access_token we defined in the Laravel controller
             if (response.data.access_token) {
+                // Store the token
                 localStorage.setItem('auth_token', response.data.access_token);
-                window.location.href = '/dashboard'; 
+                
+                // 3. Navigate to landing
+                // Using window.location.href is fine for a hard reset, 
+                // but if using react-router-dom, use: navigate('/landing');
+                window.location.href = '/landing'; 
             }
         } catch (error) {
-            alert(error.response?.data?.message || "Signup failed");
+            // 4. Improved Error Reporting
+            // If Laravel returns validation errors (422), show the specific message
+            const serverMessage = error.response?.data?.message;
+            const validationErrors = error.response?.data?.errors;
+            
+            if (validationErrors) {
+                // If there are multiple errors (like password length), show the first one
+                const firstError = Object.values(validationErrors)[0][0];
+                alert(firstError);
+            } else {
+                alert(serverMessage || "Signup failed. Please try again.");
+            }
+            
+            console.error("Signup Error Details:", error.response?.data);
         } finally {
             setLoading(false);
         }
