@@ -2290,7 +2290,7 @@ box-sizing: border-box;
     height: calc(100vh - 140px); 
     
     /* Enables vertical scrolling */
-    overflow-y: auto; 
+    overflow: hidden;
     
     /* Optional: Improves scrolling feel on mobile */
     -webkit-overflow-scrolling: touch; 
@@ -2306,7 +2306,6 @@ box-sizing: border-box;
     background-color: rgb(121 120 120 / 43%);
     box-shadow: 4px 4px 59px 0px rgb(0 0 0);
     -webkit-box-shadow: 4px 4px 59px 0px rgb(0 0 0 / 10%);
-    position: absolute;
     position: absolute;
     right: 0;
     z-index: 8;
@@ -2846,3 +2845,144 @@ body.light-mode #account-popup {
     transition: background-color 0.5s ease, color 0.5s ease, border 0.5s ease;
   }
   
+  /* Light Mode Adjustments for the Brands UI */
+.light-mode .brand-card {
+    background: rgba(0, 0, 0, 0.03); /* Light grey instead of dark */
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    color: #1d1d1f; /* Dark text */
+}
+
+.light-mode .brand-card:hover {
+    background: #ffffff;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-color: #007aff;
+}
+
+.light-mode .search-box input {
+    background: #f5f5f7;
+    border: 1px solid #d2d2d7;
+    color: #1d1d1f;
+}
+
+.light-mode .brand-info p {
+    color: #6e6e73; /* Dimmer text for descriptions */
+}
+
+.light-mode .add-card-dashed {
+    border: 2px dashed #d2d2d7;
+    color: #86868b;
+}
+
+.light-mode .view-btn {
+    background: #1d1d1f;
+    color: #ffffff;
+}
+
+.light-mode .edit-btn {
+    border-color: #d2d2d7;
+    color: #1d1d1f;
+}
+
+.welcome-banner {
+    margin-bottom: 40px;
+}
+
+.welcome-banner h1 {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    background: linear-gradient(to right, #fff, #888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 16px;
+}
+
+.stat-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 10px 0;
+}
+
+.stat-trend {
+    font-size: 0.8rem;
+}
+
+.stat-trend.positive { color: #00ff7f; }
+
+.recent-activity {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    padding: 25px;
+}
+
+.activity-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activity-dot {
+    width: 8px;
+    height: 8px;
+    background: #007aff;
+    border-radius: 50%;
+}
+
+/* Light Mode Overrides */
+.light-mode .stat-card {
+    background: #fff;
+    border-color: #eee;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.light-mode .welcome-banner h1 {
+    background: linear-gradient(to right, #1d1d1f, #555);
+    -webkit-background-clip: text;
+}
+
+
+
+.dynamic-content-scroll-area {
+    /* 1. Set the exact height and width to prevent growth */
+    /* (100vh - 140px) - 80px = (100vh - 220px) */
+    height: calc(100vh - 220px); 
+    
+    /* 2. Positioning */
+    
+    
+    /* 3. Force the scrollbar */
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
+
+    box-sizing: border-box;
+    padding-right: 15px; 
+}
+/* --- Premium Scrollbar --- */
+.dynamic-content-scroll-area::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dynamic-content-scroll-area::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.dynamic-content-scroll-area::-webkit-scrollbar-thumb {
+    background: #0047ff; /* BrandBased Blue */
+    border-radius: 10px;
+}

@@ -1,0 +1,358 @@
+/* --- Global Container --- */
+.landing-grid-wrapper {
+    width: 100%;
+    padding: 60px 40px 40px 40px; 
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+}
+
+/* --- Desktop Grid Layout --- */
+.promo-row {
+    display: grid;
+    gap: 50px;
+    align-items: center; /* Vertically centers content in the row */
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+/* Row 1: Middle is small */
+.row-free { 
+    grid-template-columns: 1.2fr 0.6fr 1.5fr; 
+}
+
+/* Row 2: Middle is dominant (Large) */
+.row-premium { 
+    grid-template-columns: 1.2fr 1.8fr 1.5fr; 
+}
+
+/* Force Left Alignment for 1st and 3rd Columns */
+.col-left, .col-right {
+    text-align: left;
+}
+
+/* Keep middle column centered */
+.col-middle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.row-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.08);
+    margin: 40px 0;
+}
+
+/* --- Visual Components (Middle Column) --- */
+.logo-explore-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    padding: 25px;
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-explore-container:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(0, 71, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.icon-circle-wrapper {
+    width: 80px;
+    height: 80px;
+    background: #111111;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(0, 71, 255, 0.3);
+    box-shadow: 0 0 25px rgba(0, 71, 255, 0.15);
+}
+
+.brand-icon-blue {
+    width: 45px;
+    height: auto;
+    filter: drop-shadow(0 0 8px rgba(0, 71, 255, 0.4));
+}
+/* --- Optimized Row 2 Layout --- */
+.promo-row2 {
+    display: grid;
+    /* Very tight gap to make the rows feel connected */
+    gap: 10px; 
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+/* Proportions Breakdown:
+   1fr: Left content (standard width)
+   1.5fr: Middle image (slightly compressed to make room)
+   2.2fr: Right list (EXTENDED to take more space)
+*/
+.row-premium { 
+    grid-template-columns: 1fr 1.5fr 2.2fr; 
+}
+
+/* Ensure the list box expands to the full width of the extended column */
+.promo-row2 .list-container-box {
+    width: 100%;
+    margin-left: 0;
+    /* Optional: slightly reduce internal padding to allow more text room */
+    padding: 15px 20px; 
+}
+
+/* Ensure the middle image doesn't force a gap */
+.product-mock-static {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.product-mock-static img {
+    max-width: 100%;
+    height: auto;
+    /* Pulling the image closer to the edges */
+    object-fit: contain;
+}
+
+/* Responsive adjustment */
+@media (max-width: 1200px) {
+    .row-premium {
+        /* On medium screens, give the list even more priority */
+        grid-template-columns: 1fr 1.2fr 2fr;
+    }
+}
+.product-mock-placeholder {
+    width: 100%;
+    min-height: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+}
+
+.explore-btn-simple {
+    background: #0047ff;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: 0.3s;
+}
+
+.explore-btn-simple:hover {
+    background: #0036c1;
+    box-shadow: 0 0 15px rgba(0, 71, 255, 0.5);
+}
+
+/* --- Typography & Content --- */
+.content-placeholder h2 { 
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 12px; 
+    letter-spacing: -0.02em;
+}
+
+.content-placeholder p { 
+    color: #888; 
+    font-size: 1rem; 
+    line-height: 1.6; 
+    margin-bottom: 25px;
+}
+
+.btn-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 28px;
+    border-radius: 25px;
+    border: 1px solid #fff;
+    background: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 500;
+    max-width: 100%;
+    box-sizing: border-box;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-placeholder.premium {
+    background: #0047ff;
+    border: none;
+}
+
+.btn-placeholder:hover {
+    transform: scale(1.05);
+}
+
+/* --- Lists (Right Column) --- */
+/* --- Feature List (Right Column) --- */
+.list-placeholder ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.list-placeholder li {
+    margin: 0;
+    padding: 15px 0; 
+    font-size: 0.95rem;
+    color: #ccc;
+    line-height: 1.5;
+    text-align: left;
+    
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+    
+    position: relative;
+}
+
+.list-placeholder li:last-child {
+    border-bottom: none;
+}
+
+/* Remove the bullet dot entirely */
+.list-placeholder li::before {
+    display: none !important;
+}
+
+.list-placeholder li strong {
+    color: #fff;
+    font-weight: 500;
+    display: block; 
+    margin-bottom: 4px;
+}
+/* --- Mobile & Tablet Responsiveness --- */
+@media (max-width: 1024px) {
+    .landing-grid-wrapper {
+        padding: 90px 20px 40px 20px; 
+    }
+
+    .promo-row {
+        grid-template-columns: 1fr !important; 
+        gap: 35px;
+        text-align: center;
+    }
+
+    .col-left, .col-right {
+        text-align: center;
+    }
+
+    .col-left { order: 1; }
+    .col-middle { order: 2; }
+    .col-right { order: 3; }
+
+    .logo-explore-container {
+        max-width: 250px;
+        margin: 0 auto;
+    }
+
+    .btn-placeholder {
+        width: 100%; 
+        white-space: normal;
+    }
+
+    .list-placeholder li {
+        text-align: center; /* Center lines on mobile */
+        padding: 20px 10px;
+    }
+    
+    .list-placeholder li::before {
+        display: none; /* Cleaner look for centered mobile lists */
+    }
+}
+
+/* The Rounded Box Container */
+.list-container-box {
+    background: rgba(255, 255, 255, 0.03); /* Very subtle fill */
+    border: 1px solid rgba(255, 255, 255, 0.1); /* Thin light white border */
+    border-radius: 20px;
+    padding: 10px 25px;
+    box-sizing: border-box;
+}
+
+.list-container-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Apply to the list items in both rows */
+.list-container-box li, 
+.list-placeholder li {
+    /* Reduced vertical padding from 15px to 8px */
+    padding: 8px 0; 
+    
+    /* Reduced margin-bottom if any */
+    margin-bottom: 0; 
+    
+    font-size: 0.85rem; /* Slightly smaller font makes it look tighter */
+    line-height: 1.5;   /* Tighter line height for the descriptions */
+    
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Ensure the bold titles don't add too much bottom margin */
+.list-container-box li strong,
+.list-placeholder li strong {
+    margin-bottom: 2px;
+    display: inline-block; /* Keeps the title and text together for less vertical height */
+}
+
+
+.list-container-box {
+    padding: 5px 20px; 
+}
+
+/* Responsive Scaling */
+@media (max-width: 1024px) {
+    .list-container-box {
+        margin-top: 20px;
+        text-align: left; /* Keep text left-aligned inside the box even on mobile */
+    }
+    
+    .promo-row.row-premium {
+        /* On mobile, ensure the 6-item list doesn't get too cramped */
+        gap: 20px;
+    }
+}
+
+.image-button-wrapper {
+    display: inline-block;
+    cursor: pointer;
+    transition: transform 0.2s ease, filter 0.2s ease;
+    margin-top: 10px;
+}
+
+.freemium-btn-img {
+    height: 40px; /* Adjust height based on your design */
+    width: auto;  /* Maintains aspect ratio */
+    display: block;
+}
+
+/* Hover effect to make the image feel like a real button */
+.image-button-wrapper:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+.image-button-wrapper:active {
+    transform: scale(0.98);
+}
