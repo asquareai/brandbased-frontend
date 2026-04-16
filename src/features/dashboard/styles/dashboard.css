@@ -1,3 +1,20 @@
+:root {
+    /* Default Dark Mode Values */
+    --dashboard-bg: #0d0e10;
+    --text-heading: #ffffff;
+    --text-sub: #949494;
+    --border-color: rgba(255, 255, 255, 0.15);
+    --divider-color: rgba(255, 255, 255, 0.08);
+}
+
+/* When the body has a light class, change the values */
+body.light-mode {
+    --dashboard-bg: #f5f7fa;
+    --text-heading: #1a1c20;
+    --text-sub: #5c6370;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --divider-color: rgba(0, 0, 0, 0.1);
+}
 
 
 
@@ -1929,7 +1946,7 @@ box-sizing: border-box;
 }
 .bb-typefaceImgMobile
 {
-  max-width: 150px;
+  max-width: 30px;
 }
 .bb-typefaceImgBIcon{
   width:30px;
@@ -2303,7 +2320,7 @@ box-sizing: border-box;
     border-radius: 30px;
     backdrop-filter: blur(30px);
     -webkit-backdrop-filter: blur(30px);
-    background-color: rgb(121 120 120 / 43%);
+    background-color: #0d0e10;
     box-shadow: 4px 4px 59px 0px rgb(0 0 0);
     -webkit-box-shadow: 4px 4px 59px 0px rgb(0 0 0 / 10%);
     position: absolute;

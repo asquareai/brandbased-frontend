@@ -1,182 +1,118 @@
 /* --- Global Container --- */
 .landing-grid-wrapper {
     width: 100%;
-    padding: 60px 40px 40px 40px; 
     box-sizing: border-box;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     font-family: 'Roboto', sans-serif;
-    color: #fff;
+    padding-top: 20px;
+    height:calc(100% - 50px);
+}
+
+/* Inner Layout Container matching the 'card' look */
+.inner-landing-container {
+    width: 100%;
+    border-radius: 12px;
+    padding: 20px 40px 40px 40px;
+    /* Adaptive panel background */
+}
+
+/* --- Section Title --- */
+.section-title-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 50px;
+}
+
+.section-title-header h2 {
+    color: var(--text-main); /* Adaptive */
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+    letter-spacing: -0.01em;
 }
 
 /* --- Desktop Grid Layout --- */
 .promo-row {
     display: grid;
-    gap: 50px;
-    align-items: center; /* Vertically centers content in the row */
-    margin-bottom: 40px;
-    width: 100%;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 0; 
 }
 
-/* Row 1: Middle is small */
-.row-free { 
-    grid-template-columns: 1.2fr 0.6fr 1.5fr; 
+.row-free {
+    grid-template-columns: 1.2fr 0.6fr 1.5fr;
 }
 
-/* Row 2: Middle is dominant (Large) */
-.row-premium { 
-    grid-template-columns: 1.2fr 1.8fr 1.5fr; 
+.row-premium {
+    grid-template-columns: 1fr 1fr 2fr;
 }
 
-/* Force Left Alignment for 1st and 3rd Columns */
-.col-left, .col-right {
+.text-align-left {
     text-align: left;
 }
 
-/* Keep middle column centered */
 .col-middle {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
 }
 
+/* Horizontal line separator between rows */
 .row-divider {
     border: 0;
     height: 1px;
-    background: rgba(255, 255, 255, 0.08);
-    margin: 40px 0;
+    background: var(--divider); /* Adaptive divider */
+    margin: 50px 0;
 }
 
-/* --- Visual Components (Middle Column) --- */
-.logo-explore-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.02);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+/* --- Typography (Column 1) --- */
+.content-placeholder h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-main); /* Adaptive */
+    margin-top: 0;
+    margin-bottom: 12px;
 }
 
-.logo-explore-container:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(0, 71, 255, 0.5);
-    transform: translateY(-5px);
+.content-placeholder p {
+    color: var(--text-sub); /* Adaptive */
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    max-width: 80%;
 }
 
-.icon-circle-wrapper {
-    width: 80px;
-    height: 80px;
-    background: #111111;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgba(0, 71, 255, 0.3);
-    box-shadow: 0 0 25px rgba(0, 71, 255, 0.15);
-}
-
-.brand-icon-blue {
-    width: 45px;
-    height: auto;
-    filter: drop-shadow(0 0 8px rgba(0, 71, 255, 0.4));
-}
-/* --- Optimized Row 2 Layout --- */
-.promo-row2 {
-    display: grid;
-    /* Very tight gap to make the rows feel connected */
-    gap: 10px; 
-    align-items: center;
-    margin-bottom: 20px;
-    width: 100%;
-}
-
-/* Proportions Breakdown:
-   1fr: Left content (standard width)
-   1.5fr: Middle image (slightly compressed to make room)
-   2.2fr: Right list (EXTENDED to take more space)
-*/
-.row-premium { 
-    grid-template-columns: 1fr 1.5fr 2.2fr; 
-}
-
-/* Ensure the list box expands to the full width of the extended column */
-.promo-row2 .list-container-box {
-    width: 100%;
-    margin-left: 0;
-    /* Optional: slightly reduce internal padding to allow more text room */
-    padding: 15px 20px; 
-}
-
-/* Ensure the middle image doesn't force a gap */
-.product-mock-static {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-}
-
-.product-mock-static img {
+/* --- Visual Components (Column 2 - Middle) --- */
+.mockup-img {
     max-width: 100%;
     height: auto;
-    /* Pulling the image closer to the edges */
-    object-fit: contain;
+    display: block;
+    transition: transform 0.3s ease;
 }
 
-/* Responsive adjustment */
-@media (max-width: 1200px) {
-    .row-premium {
-        /* On medium screens, give the list even more priority */
-        grid-template-columns: 1fr 1.2fr 2fr;
-    }
+.mockup-img:hover {
+    transform: scale(1.02);
 }
-.product-mock-placeholder {
+
+.logo-explore-mockup {
+    max-width: 250px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-display-mockup {
     width: 100%;
-    min-height: 250px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px dashed rgba(255, 255, 255, 0.2);
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #888;
+    max-width: 500px; 
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
-.explore-btn-simple {
-    background: #0047ff;
-    color: white;
-    border: none;
-    padding: 10px 24px;
-    border-radius: 12px;
-    width: 100%;
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: 0.3s;
-}
-
-.explore-btn-simple:hover {
-    background: #0036c1;
-    box-shadow: 0 0 15px rgba(0, 71, 255, 0.5);
-}
-
-/* --- Typography & Content --- */
-.content-placeholder h2 { 
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 12px; 
-    letter-spacing: -0.02em;
-}
-
-.content-placeholder p { 
-    color: #888; 
-    font-size: 1rem; 
-    line-height: 1.6; 
-    margin-bottom: 25px;
-}
-
+/* --- Buttons (Column 1) --- */
 .btn-placeholder {
     display: inline-flex;
     align-items: center;
@@ -184,175 +120,162 @@
     gap: 10px;
     padding: 12px 28px;
     border-radius: 25px;
-    border: 1px solid #fff;
+    border: 1px solid var(--btn-border); /* Adaptive border */
     background: transparent;
-    color: #fff;
+    color: var(--text-main); /* Adaptive text */
     cursor: pointer;
+    font-size: 0.95rem;
     font-weight: 500;
-    max-width: 100%;
-    box-sizing: border-box;
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: background 0.2s, transform 0.1s;
 }
 
 .btn-placeholder.premium {
-    background: #0047ff;
+    background: var(--accent-blue);
     border: none;
+    color: #ffffff; /* Stays white for contrast on blue */
 }
 
 .btn-placeholder:hover {
-    transform: scale(1.05);
+    background: rgba(128, 128, 128, 0.1);
 }
 
-/* --- Lists (Right Column) --- */
-/* --- Feature List (Right Column) --- */
-.list-placeholder ul {
+.btn-placeholder.premium:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+}
+
+/* --- Lists with Thin Lines (Column 3 - Right) --- */
+.list-placeholder.thin-lines {
+    /* Add the border and rounding here */
+    border: 1px solid var(--divider); /* Uses your light grey/transparent variable */
+    border-radius: 12px;
+    padding: 15px 25px; /* Adds space between the border and the text */
+    background: rgba(128, 128, 128, 0.03); /* Extremely faint tint to define the area */
+}
+
+.list-placeholder.thin-lines ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.list-placeholder li {
-    margin: 0;
-    padding: 15px 0; 
-    font-size: 0.95rem;
-    color: #ccc;
-    line-height: 1.5;
-    text-align: left;
-    
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
-    
-    position: relative;
+.list-placeholder.thin-lines li {
+    font-size: 0.9rem;
+    color: var(--text-list);
+    line-height: 1.4; /* Increased slightly for better readability inside a box */
+    padding: 12px 0;
+    border-bottom: 1px solid var(--divider);
 }
 
-.list-placeholder li:last-child {
+/* Ensure the last item doesn't have a double border with the container */
+.list-placeholder.thin-lines li:last-child {
     border-bottom: none;
 }
 
-/* Remove the bullet dot entirely */
-.list-placeholder li::before {
-    display: none !important;
+.list-placeholder.thin-lines li strong {
+    color: var(--text-main); /* Adaptive bold text */
+    font-weight: 500;
 }
 
-.list-placeholder li strong {
-    color: #fff;
-    font-weight: 500;
-    display: block; 
-    margin-bottom: 4px;
-}
-/* --- Mobile & Tablet Responsiveness --- */
+/* --- Mobile Responsiveness --- */
 @media (max-width: 1024px) {
     .landing-grid-wrapper {
-        padding: 90px 20px 40px 20px; 
+        padding: 40px 15px 20px 15px;
+    }
+    
+    .inner-landing-container {
+        padding: 0px;
     }
 
     .promo-row {
-        grid-template-columns: 1fr !important; 
-        gap: 35px;
+        grid-template-columns: 1fr !important;
+        gap: 30px;
+        text-align: center;
+    }
+    
+    .text-align-left {
         text-align: center;
     }
 
-    .col-left, .col-right {
-        text-align: center;
+    .row-divider {
+        margin: 40px 0;
     }
 
     .col-left { order: 1; }
     .col-middle { order: 2; }
     .col-right { order: 3; }
 
-    .logo-explore-container {
-        max-width: 250px;
-        margin: 0 auto;
-    }
-
     .btn-placeholder {
         width: 100%; 
         white-space: normal;
     }
 
-    .list-placeholder li {
-        text-align: center; /* Center lines on mobile */
-        padding: 20px 10px;
-    }
-    
-    .list-placeholder li::before {
-        display: none; /* Cleaner look for centered mobile lists */
+    .content-placeholder p {
+        max-width: 100%;
     }
 }
-
-/* The Rounded Box Container */
-.list-container-box {
-    background: rgba(255, 255, 255, 0.03); /* Very subtle fill */
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Thin light white border */
-    border-radius: 20px;
-    padding: 10px 25px;
-    box-sizing: border-box;
-}
-
-.list-container-box ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-/* Apply to the list items in both rows */
-.list-container-box li, 
-.list-placeholder li {
-    /* Reduced vertical padding from 15px to 8px */
-    padding: 8px 0; 
-    
-    /* Reduced margin-bottom if any */
-    margin-bottom: 0; 
-    
-    font-size: 0.85rem; /* Slightly smaller font makes it look tighter */
-    line-height: 1.5;   /* Tighter line height for the descriptions */
-    
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-/* Ensure the bold titles don't add too much bottom margin */
-.list-container-box li strong,
-.list-placeholder li strong {
-    margin-bottom: 2px;
-    display: inline-block; /* Keeps the title and text together for less vertical height */
-}
-
-
-.list-container-box {
-    padding: 5px 20px; 
-}
-
-/* Responsive Scaling */
 @media (max-width: 1024px) {
-    .list-container-box {
-        margin-top: 20px;
-        text-align: left; /* Keep text left-aligned inside the box even on mobile */
+    /* 1. Center the entire content column content */
+    .col-left.text-align-left {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* This centers the button horizontally */
     }
-    
-    .promo-row.row-premium {
-        /* On mobile, ensure the 6-item list doesn't get too cramped */
-        gap: 20px;
+
+    .content-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Ensures h3 and p are centered as well */
+        width: 100%;
+    }
+
+    /* 2. Adjust the button specifically for mobile */
+    .btn-placeholder {
+        width: fit-content; /* Keeps the button from stretching too wide unless you want it full-width */
+        min-width: 200px;   /* Optional: gives it a nice presence on mobile */
+        margin: 0 auto;     /* Standard centering fallback */
+        justify-content: center;
+    }
+
+    /* 3. Ensure the paragraph doesn't stay left-aligned */
+    .content-placeholder p {
+        max-width: 100%;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
+@media (max-width: 1024px) {
+    /* 1. Center the content blocks but keep the lists clean */
+    .col-left, .col-middle, .col-right {
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Centers the container on the screen */
+        width: 100%;
+    }
 
-.image-button-wrapper {
-    display: inline-block;
-    cursor: pointer;
-    transition: transform 0.2s ease, filter 0.2s ease;
-    margin-top: 10px;
-}
+    /* 2. Text alignment for headings and paragraphs */
+    .content-placeholder h3, 
+    .content-placeholder p {
+        text-align: center;
+    }
 
-.freemium-btn-img {
-    height: 40px; /* Adjust height based on your design */
-    width: auto;  /* Maintains aspect ratio */
-    display: block;
-}
+    /* 3. The "Fix": Keep bullets left-aligned within their centered box */
+    .list-placeholder.thin-lines {
+        align-self: center; /* Centers the whole box */
+        text-align: left;   /* Keeps the text and bullets starting from the left */
+        width: 90%;         /* Gives it some breathing room on the sides */
+        max-width: 450px;   /* Prevents it from getting too wide on tablets */
+    }
 
-/* Hover effect to make the image feel like a real button */
-.image-button-wrapper:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-}
+    .list-placeholder.thin-lines ul {
+        text-align: left;   /* Double insurance for the list items */
+    }
 
-.image-button-wrapper:active {
-    transform: scale(0.98);
+    /* 4. Center the button */
+    .btn-placeholder {
+        margin: 0 auto;
+        display: inline-flex;
+    }
 }

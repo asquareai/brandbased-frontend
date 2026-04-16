@@ -96,9 +96,9 @@ const SignupPage = () => {
                 // Store the token
                 localStorage.setItem('auth_token', response.data.access_token);
                 
-                // 3. Navigate to landing
-                // Using window.location.href is fine for a hard reset, 
-                // but if using react-router-dom, use: navigate('/landing');
+            if (response.data.user) {
+                localStorage.setItem('user_info', JSON.stringify(response.data.user));
+            }
                 window.location.href = '/landing'; 
             }
         } catch (error) {

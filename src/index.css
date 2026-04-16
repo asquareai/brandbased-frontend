@@ -12,3 +12,29 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
+
+/* --- Global Theme Variables --- */
+:root {
+    /* DARK MODE (Default) */
+    --bg-main: #0d0e10;
+    --bg-panel: #16171a;
+    --text-main: #ffffff;
+    --text-sub: #999999;
+    --text-list: #cccccc;
+    --divider: rgba(255, 255, 255, 0.08);
+    --btn-border: rgba(255, 255, 255, 0.8);
+    --accent-blue: #0047ff;
+}
+
+/* LIGHT MODE OVERRIDE */
+[data-theme='light'] {
+    --bg-main: #f5f7fa;
+    --bg-panel: #ffffff;
+    --text-main: #1a1a1b;   /* Dark Charcoal */
+    --text-sub: #555555;    /* Gray for paragraphs */
+    --text-list: #444444;   /* Darker gray for lists */
+    --divider: rgba(0, 0, 0, 0.1);
+    --btn-border: #1a1a1b;
+    --accent-blue: #0047ff;
+}
