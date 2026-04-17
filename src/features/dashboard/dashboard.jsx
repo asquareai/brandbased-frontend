@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect,useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/dashboard.css';
-import Brands from '../../components/Brands';
+import Brands from '../../components/BrandCreation';
 import DashboardHome from '../../components/DashboardHome';
+import BrandCreation from '../../components/BrandCreation'; 
 
 // --- Sub-Component Placeholders ---
 // In a real project, move these to separate files like ./sections/Brands.jsx
@@ -23,30 +24,47 @@ const Dashboard = () => {
     const [activeTab, setActiveTab] = useState('Start Now');
     const [isShining, setIsShining] = useState(false);
 
-    // --- Theme Logic ---
-    useEffect(() => {
-         const savedTheme = localStorage.getItem('theme');
-         const systemPrefersLight = window.matchMedia('(prefers-color-scheme: light)');
-
-        const handleThemeInitialization = () => {
-            if (savedTheme) {
-                applyTheme(savedTheme === 'light');
-            } else {
-                applyTheme(systemPrefersLight.matches);
+    
+    const [brands, setBrands] = useState([]); // This holds ALL user brands
+    const [selectedBrand, setSelectedBrand] = useState(null); // This holds the one being viewed
+    const fetchBrands = useCallback(async () => {
+            try {
+                const token = localStorage.getItem('auth_token');
+                const response = await fetch(`${process.env.REACT_APP_API_URL}/user/brands`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    setBrands(data.brands || []);
+                    console.log("Brands Refreshed:", data.brands);
+                }
+            } catch (err) {
+                console.error("Polling error:", err);
             }
-        };
+        }, []);
 
-        handleThemeInitialization();
+        useEffect(() => {
+            fetchBrands();
+        }, [fetchBrands]);
 
-        const listener = (e) => {
-            if (!localStorage.getItem('theme')) {
-                applyTheme(e.matches);
+        useEffect(() => {
+            const interval = setInterval(() => {
+                fetchBrands();
+            }, 5000); 
+            return () => clearInterval(interval);
+        }, [fetchBrands]);
+
+        // THE SYNC BRIDGE: Updates the selected brand view when polling finds changes
+        useEffect(() => {
+            if (selectedBrand) {
+                const updated = brands.find(b => b.id === selectedBrand.id);
+                if (updated) {
+                    setSelectedBrand(updated);
+                }
             }
-        };
+        }, [brands]);
 
-        systemPrefersLight.addEventListener('change', listener);
-        return () => systemPrefersLight.removeEventListener('change', listener);
-    }, []);
+    
 
     const applyTheme = (isLight) => {
         const themeValue = isLight ? 'light' : 'dark';
@@ -62,22 +80,44 @@ const Dashboard = () => {
         navigate('/login');
     };
 
+    const handleTabChange = (tabLabel, brandData = null) => {
+        setSelectedBrand(brandData); 
+        setActiveTab(tabLabel);
+    };
+
+    // Keep your name 'navItems' but use it for UI data only
     const navItems = [
-        { id: 'start', label: 'Start Now', icon: 'start.svg', component: <DashboardHome /> },
-        { id: 'brands', label: 'Brands', icon: 'brands.svg', component: <Brands /> },
-        { id: 'onboard-platform', label: 'Platforms', icon: 'platforms.svg', component: <Platforms /> },
-        { id: 'productsd', label: 'Products', icon: 'products.svg', component: <Products /> },
-        { id: 'payments', label: 'Payments', icon: 'payments.svg', component: <Payments /> },
-        { id: 'hotspots', label: 'Hotspots', icon: 'hotspots.svg', component: <Hotspots /> },
-        { id: 'ai-logic', label: 'AI-Logic', icon: 'ai-logic.svg', component: <AiLogic /> },
-        { id: 'brand-settings', label: 'Brand Settings', icon: 'settings.svg', component: <Settings /> },
-        { id: 'campaigns', label: 'Campaigns', icon: 'campaigns.svg', component: <Campaigns /> },
-        { id: 'metrics', label: 'Metrics', icon: 'Metrics.svg', component: <Metrics /> },
+        { id: 'start', label: 'Start Now', icon: 'start.svg' },
+        { id: 'brand-create', label: 'Brand Creation', icon: 'brands.svg' },
+        { id: 'brands', label: 'Brands', icon: 'brands.svg' },
+        { id: 'onboard-platform', label: 'Platforms', icon: 'platforms.svg' },
+        { id: 'productsd', label: 'Products', icon: 'products.svg' },
+        { id: 'payments', label: 'Payments', icon: 'payments.svg' },
+        { id: 'hotspots', label: 'Hotspots', icon: 'hotspots.svg' },
+        { id: 'ai-logic', label: 'AI-Logic', icon: 'ai-logic.svg' },
+        { id: 'brand-settings', label: 'Brand Settings', icon: 'settings.svg' },
+        { id: 'campaigns', label: 'Campaigns', icon: 'campaigns.svg' },
+        { id: 'metrics', label: 'Metrics', icon: 'Metrics.svg' },
     ];
 
+    // This dynamically renders the component with the LATEST selectedBrand state
     const getActiveComponent = () => {
-        const item = navItems.find(nav => nav.label === activeTab);
-        return item ? item.component : <Brands />;
+        switch (activeTab) {
+            case 'Start Now':
+                return <DashboardHome brands={brands} setActiveTab={handleTabChange} />;
+            case 'Brand Creation':
+                return <BrandCreation existingBrand={selectedBrand} setActiveTab={handleTabChange} />;
+            case 'Brands': return <Brands />;
+            case 'Platforms': return <Platforms />;
+            case 'Products': return <Products />;
+            case 'Payments': return <Payments />;
+            case 'Hotspots': return <Hotspots />;
+            case 'AI-Logic': return <AiLogic />;
+            case 'Brand Settings': return <Settings />;
+            case 'Campaigns': return <Campaigns />;
+            case 'Metrics': return <Metrics />;
+            default: return <DashboardHome brands={brands} setActiveTab={handleTabChange} />;
+        }
     };
 
     return (
@@ -106,7 +146,7 @@ const Dashboard = () => {
                 <div className="account-section">
                     <div id="account-popup">
                         <div className="theme-toggle-container">
-                            <span className="theme-label">{isDarkMode ? "Theme Dark" : "Theme Light"}</span>
+                            <span className="theme-label">{isDarkMode ? "Theme Dark" : "Theme Light"} tested</span>
                             <label className="theme-button">
                                 <input 
                                     type="checkbox" 

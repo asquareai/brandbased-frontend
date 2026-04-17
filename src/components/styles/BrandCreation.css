@@ -1,0 +1,834 @@
+.brands-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height:calc(100% - 50px);
+    margin-top: 40px;
+}
+
+.brands-col-left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.brands-title {
+    color: var(--text-main);
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 30px;
+}
+
+.brands-form-wrapper {
+    width: 100%;
+    max-width: 480px;
+}
+
+/* --- Input Styling --- */
+.brands-input-group {
+    position: relative;
+    margin-bottom: 18px;
+    width: 100%;
+}
+
+.brands-main-input {
+    width: 100%;
+    background: #b8bbc1; /* Specific grey from screenshot */
+    border: none;
+    border-radius: 50px; /* Full pill shape */
+    padding: 14px 25px;
+    font-size: 0.95rem;
+    color: #555;
+    outline: none;
+}
+
+.brand-name-placeholder::placeholder {
+    color: #4361ee; /* Blue text for the first placeholder */
+}
+
+.brands-info-circle {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1b3bbb; /* Deep blue info icon */
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+/* --- Upload Section --- */
+.brands-upload-text {
+    text-align: center;
+    color: #999;
+    font-size: 0.9rem;
+    margin: 20px 0 15px 0;
+}
+
+.brands-upload-grid {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.brands-upload-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.brands-upload-box {
+    width: 180px;
+    height: 130px;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.light-box { background: #c4c4c4; }
+.dark-box { background: #333333; }
+
+.brands-plus-icon {
+    font-size: 4.5rem; /* Increased from 3rem */
+    font-weight: 200;  /* Kept thin for a modern look */
+    color: #777;
+    margin-bottom: -10px;
+    line-height: 1;
+}
+
+.brands-format-text {
+    font-size: .8rem;
+    color: #888;
+}
+
+.brands-label-text {
+    margin-top: 10px;
+    color: var(--text-main);
+    font-size: .8rem;
+}
+
+.upload-info {
+    right: -25px;
+}
+
+/* --- Continue Button --- */
+.brands-btn-continue {
+    width: 100%;
+    background: #1b3bbb;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.brands-btn-continue:hover {
+    background: #152e96;
+}
+
+/* --- Mobile Fix --- */
+@media (max-width: 1024px) {
+    .brands-container { grid-template-columns: 1fr; }
+    .brands-col-right { display: none; }
+}
+
+/* --- Right Column Layout --- */
+.brands-col-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 40px; /* Space for the divider */
+}
+
+/* Vertical Divider Line */
+.vertical-divider {
+    position: absolute;
+    left: 0;
+    top: 10%;
+    bottom: 10%;
+    width: 1.5px;
+    background: rgba(255, 255, 255, 0.2); /* Soft grey/white line */
+}
+
+.verify-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.verify-subtitle {
+    color: #4361ee;
+    font-size: 0.85rem;
+    margin-top: -20px;
+    margin-bottom: 60px;
+    font-weight: 500;
+}
+
+/* --- Logo Preview --- */
+.logo-display-area {
+    width: 100%;
+    height: 250px; 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+}
+.preview-logo-large {
+    max-width: 220px;
+    max-height: 100%; 
+    object-fit: contain; 
+    filter: drop-shadow(0px 15px 25px rgba(0, 0, 0, 0.4));
+    transition: all 0.3s ease-in-out;
+}
+.verify-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Keeps the title at the top */
+    height: 100%;
+}
+
+/* --- Progress Bar Design --- */
+.progress-container-main {
+    width: 100%;
+    max-width: 420px;
+    margin-top: 20px;
+}
+
+.progress-track {
+    position: relative;
+    height: 44px;
+    /* The background track is a subtle grey as seen in the image */
+    background: #4a4a4a; 
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05); /* Slight edge definition */
+}
+
+.progress-pill-red {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: #e63946; /* High-visibility red */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 25px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border-radius: 50px;
+    z-index: 2;
+    white-space: nowrap;
+}
+
+.progress-fill-grey {
+    height: 100%;
+    /* This represents the 'loaded' portion behind the text */
+    background: #666666; 
+    border-radius: 0 50px 50px 0;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-percentage {
+    position: absolute;
+    right: 20px;
+    /* Red percentage text to match the identity pill */
+    color: #e63946; 
+    font-size: 0.9rem;
+    font-weight: 700;
+    z-index: 3;
+}
+
+/* Validation Error Message */
+.validation-error-msg {
+    background: rgba(230, 57, 70, 0.1);
+    color: #e63946;
+    padding: 10px 15px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    text-align: center;
+    border: 1px solid rgba(230, 57, 70, 0.2);
+    animation: shake 0.5s;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* Success State for Upload Boxes */
+.brands-upload-box.uploaded {
+    border: 2px solid #4CAF50;
+}
+
+.brands-upload-box.uploaded .brands-plus-icon {
+    color: #4CAF50;
+}
+
+.brands-upload-box.uploaded .brands-format-text {
+    color: #4CAF50;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+/* --- Tooltip Logic --- */
+.brands-tooltip-wrapper {
+    position: absolute;
+    right: -30px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: inline-block; /* Ensures the wrapper only takes the space of the icon */
+}
+
+.tooltip-text {
+    /* HIDE BY DEFAULT */
+    visibility: hidden;
+    opacity: 0;
+    
+    /* Layout */
+    width: 200px;
+    background-color: #1b3bbb;
+    color: #fff;
+    text-align: center;
+    border-radius: 8px;
+    padding: 10px;
+    
+    /* Positioning */
+    position: absolute;
+    z-index: 100; /* High z-index to stay on top */
+    bottom: 150%; /* Move it further up so it doesn't overlap the i */
+    left: 50%;
+    transform: translateX(-85%); /* Aligns the arrow properly */
+    
+    /* Interaction */
+    transition: opacity 0.3s ease, visibility 0.3s;
+    pointer-events: none; /* Prevents the tooltip itself from triggering hovers */
+    font-size: 0.75rem;
+    line-height: 1.3;
+    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Tooltip Arrow */
+.tooltip-text::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 85%;
+    margin-left: -5px;
+    border-width: 6px;
+    border-style: solid;
+    border-color: #1b3bbb transparent transparent transparent;
+}
+
+/* SHOW ONLY ON HOVER */
+.brands-tooltip-wrapper:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+/* --- Right Column Layout Fix --- */
+.brands-col-right {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Force the vertical divider to stay visible in Light Mode */
+.brands-container .vertical-divider {
+    border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* --- Container for the Verification UI --- */
+.verification-status-wrapper {
+    text-align: center;
+    padding: 40px;
+    margin-top: 20px;
+}
+
+/* Title & Subtitle - Forced Visibility */
+.brands-col-right .brands-title {
+    color: #ffffff !important; /* Fixed White */
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.verification-subtitle {
+    color: #999999 !important; /* Fixed Grey */
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+/* --- Waiting State (Before Upload) --- */
+.verification-waiting-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 40px;
+    text-align: center;
+}
+
+.waiting-content h3 {
+    color: #ffffff !important;
+    margin-bottom: 15px;
+}
+
+.waiting-content p {
+    color: #999999 !important;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.waiting-icon {
+    font-size: 40px;
+    margin-bottom: 20px;
+    display: block;
+}
+
+/* --- Progress Bar UI --- */
+.verification-logo-display {
+    margin: 50px auto;
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.verification-preview-img {
+    max-width: 100%;
+    filter: drop-shadow(0 0 10px rgba(37, 99, 235, 0.3)); 
+}
+
+.verification-placeholder {
+    font-size: 64px;
+    color: #333;
+    font-weight: bold;
+}
+
+.verification-progress-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    height: 38px;
+    border-radius: 20px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.verification-progress-fill {
+    height: 100%;
+    background-color: #d90429; /* Deep Red */
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+    transition: width 1s ease-in-out;
+}
+
+.verification-progress-label {
+    color: #ffffff !important; /* Always White */
+    font-size: 13px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.verification-progress-percent {
+    position: absolute;
+    right: 15px;
+    color: #ff3b3b !important; /* Always Red */
+    font-weight: bold;
+}
+
+/* Meta Code Display Box */
+.meta-code-display {
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 12px;
+    color: #00ff00; /* Terminal Green */
+}
+
+.copy-btn {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+.copy-btn:hover {
+    background: #444;
+}
+
+/* Green bar for success */
+.verification-progress-fill.success {
+    background-color: #28a745; 
+}
+
+/* Yellow/Orange for waiting on meta */
+.verification-progress-fill.waiting {
+    background-color: #f39c12;
+}
+
+.back-to-dashboard-btn {
+    background: transparent;
+    border: 1px solid #333;
+    color: #888;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    width: fit-content;
+}
+
+.back-to-dashboard-btn:hover {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-color: #555;
+}
+
+.back-arrow {
+    font-size: 16px;
+}
+
+
+/* --- Verification Panel Layout --- */
+.verification-panel {
+    padding: 10px;
+    max-width: 520px;
+}
+
+.panel-brand-header {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    text-align: center;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.panel-main-title {
+    font-size: 1.5rem;
+    color: var(--text-main);
+    margin-bottom: 15px;
+    font-weight: 800;
+    text-align: left;
+}
+
+.panel-description, .panel-footer-text {
+    font-size: 0.95rem;
+    color: var(--text-sub);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+/* --- Code Snippet Styling --- */
+.code-block-container {
+    background: var(--bg-panel); /* Uses your index.css panel color */
+    border: 1px solid var(--divider);
+    border-radius: 12px;
+    margin-bottom: 25px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.code-block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.03);
+    border-bottom: 1px solid var(--divider);
+}
+
+.code-lang {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text-sub);
+    letter-spacing: 0.5px;
+}
+
+.copy-btn-minimal {
+    background: transparent;
+    border: none;
+    color: var(--accent-blue);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    transition: transform 0.2s;
+}
+
+.copy-btn-minimal:hover {
+    transform: scale(1.1);
+}
+
+.code-block-body {
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.code-comment {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.code-tag {
+    color: var(--text-main);
+}
+
+/* --- Sync Button (Dark Navy from Image) --- */
+.sync-action-btn {
+    width: 75%;
+    background: #050530; /* Specific navy from your screenshot */
+    color: #ffffff;
+    border: none;
+    padding: 16px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.sync-action-btn:hover {
+    background: #000044;
+    box-shadow: 0 0 20px rgba(0, 71, 255, 0.2);
+}
+
+.info-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    background: var(--accent-blue);
+    color: #fff;
+    border-radius: 50%;
+    font-size: 11px;
+    margin-left: 6px;
+    cursor: help;
+}
+
+/* Light Mode specific tweaks */
+[data-theme='light'] .sync-action-btn {
+    background: #050530; /* Keep it dark for contrast even in light mode */
+}
+
+/* Container for the Right Side Content */
+.verification-status-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    text-align: center;
+}
+
+/* Success View Specifics */
+.success-header {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin-bottom: 40px;
+}
+
+.success-logo-container {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main-success-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.green-check-badge {
+    position: absolute;
+    top: 15%;
+    right: -5px;
+    background: #fff;
+    border: 3px solid #7ed321; /* The specific light green from image */
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.green-check-badge svg {
+    width: 20px;
+    height: 20px;
+}
+
+.success-status-text {
+    color: #7ed321; /* Green color from image */
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 50px;
+}
+
+/* The Black Button from your image */
+.continue-settings-btn {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 16px 40px;
+    border-radius: 100px;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100%;
+    max-width: 320px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.continue-settings-btn:hover {
+    transform: scale(1.02);
+    background: #1a1a1a;
+}
+
+/* Light mode override for button */
+[data-theme='light'] .continue-settings-btn {
+    background: #000000;
+    color: #ffffff;
+}
+
+/* Ensure the right column itself is a flex container */
+.brands-col-right {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontal Center */
+    justify-content: center; /* Vertical Center */
+    height: 100%;
+    position: relative;
+    padding: 20px;
+}
+
+/* The vertical divider should be absolute so it doesn't push the content */
+.vertical-divider {
+    position: absolute;
+    left: 0;
+    top: 10%;
+    height: 80%;
+    width: 1px;
+    background: var(--divider);
+}
+
+/* Updated Container for the Success View */
+.verification-status-container {
+    width: 100%;
+    max-width: 400px; /* Limits width to keep it looking like the screenshot */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centers children horizontally */
+    justify-content: center; /* Centers children vertically */
+    text-align: center;
+}
+
+/* Adjust the Success View wrapper */
+.identity-success-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Horizontal Center */
+    width: 100%;
+}
+
+/* Logo container needs to stay centered */
+.success-logo-container {
+    position: relative;
+    width: 160px; /* Slightly larger for better impact */
+    height: 160px;
+    margin: 0 auto 30px auto; /* auto left/right centers the block */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* The "Continue" button should be centered and match the image width */
+.continue-settings-btn {
+    background: #000000;
+    color: #ffffff;
+    border: none;
+    padding: 16px 20px;
+    border-radius: 100px;
+    font-size: 1rem;
+    font-weight: 700;
+    width: 100%; /* Spans the width of the max-width container */
+    max-width: 340px; 
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 auto; /* Ensures it stays centered */
+}
+
+.success-status-text {
+    color: #7ed321;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.logo-preview-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.logo-preview-wrapper img {
+    /* Set the specific small width here */
+    width: 250px; 
+    height: auto;
+    object-fit: contain;
+    /* Optional: filter to ensure it pops on dark backgrounds if it's a dark logo */
+    filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.2));
+}

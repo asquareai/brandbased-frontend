@@ -25,6 +25,8 @@ body {
     --divider: rgba(255, 255, 255, 0.08);
     --btn-border: rgba(255, 255, 255, 0.8);
     --accent-blue: #0047ff;
+    --fixed-white: #ffffff;
+    --fixed-grey: #999999;
 }
 
 /* LIGHT MODE OVERRIDE */

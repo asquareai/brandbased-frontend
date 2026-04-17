@@ -5,6 +5,7 @@ import DashboardPage from './features/dashboard/dashboard';
 import ForgotPassword from './features/auth/ForgotPassword';
 import LandingPage from './features/dashboard/LandingPage';
 import LogoutPage from './features/auth/LogoutPage';
+import BrandCreation from './components/BrandCreation'; // Updated Import
 
 const Maintenance = () => (
   <div style={{ height: '100vh', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', fontFamily: 'sans-serif', textAlign: 'center', padding: '20px' }}>
@@ -36,6 +37,7 @@ function App() {
           path="/dashboard" 
           element={isAuthenticated ? <DashboardPage /> : <Navigate to="/login" replace />} 
         />
+        <Route path="/brand/new" element={<BrandCreation />} />
         
         <Route 
           path="/landing" 
