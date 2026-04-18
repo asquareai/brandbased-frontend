@@ -9,7 +9,8 @@
 .brands-col-left {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: left;
+    width:100%;
 }
 
 .brands-title {
@@ -201,7 +202,7 @@
 /* --- Progress Bar Design --- */
 .progress-container-main {
     width: 100%;
-    max-width: 420px;
+    max-width: 600px;
     margin-top: 20px;
 }
 
@@ -428,7 +429,6 @@
 .verification-progress-container {
     position: relative;
     width: 100%;
-    max-width: 400px;
     height: 38px;
     border-radius: 20px;
     margin: 0 auto;
@@ -529,7 +529,7 @@
 /* --- Verification Panel Layout --- */
 .verification-panel {
     padding: 10px;
-    max-width: 520px;
+    max-width: 100%;
 }
 
 .panel-brand-header {
@@ -617,8 +617,6 @@
 /* --- Sync Button (Dark Navy from Image) --- */
 .sync-action-btn {
     width: 75%;
-    background: #050530; /* Specific navy from your screenshot */
-    color: #ffffff;
     border: none;
     padding: 16px;
     border-radius: 50px;
@@ -626,13 +624,9 @@
     font-weight: 700;
     cursor: pointer;
     margin-top: 10px;
-    transition: all 0.3s ease;
+
 }
 
-.sync-action-btn:hover {
-    background: #000044;
-    box-shadow: 0 0 20px rgba(0, 71, 255, 0.2);
-}
 
 .info-badge {
     display: inline-flex;
@@ -656,6 +650,7 @@
 /* Container for the Right Side Content */
 .verification-status-container {
     height: 100%;
+    width:100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -663,7 +658,22 @@
     padding: 40px;
     text-align: center;
 }
+.verification-notes-container
+{
+    margin-top: 15px;
+    font-size: 13px;
+    color: #666;
+    text-transform: capitalize;
+}
 
+
+.progress-section
+{
+    max-width: 250px;
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+}
 /* Success View Specifics */
 .success-header {
     font-size: 1.1rem;
@@ -683,7 +693,7 @@
 }
 
 .main-success-logo {
-    max-width: 100%;
+    width:  200px;
     max-height: 100%;
     object-fit: contain;
 }
@@ -717,8 +727,6 @@
 
 /* The Black Button from your image */
 .continue-settings-btn {
-    background: #000000;
-    color: #ffffff;
     border: none;
     padding: 16px 40px;
     border-radius: 100px;
@@ -727,19 +735,8 @@
     width: 100%;
     max-width: 320px;
     cursor: pointer;
-    transition: transform 0.2s;
 }
 
-.continue-settings-btn:hover {
-    transform: scale(1.02);
-    background: #1a1a1a;
-}
-
-/* Light mode override for button */
-[data-theme='light'] .continue-settings-btn {
-    background: #000000;
-    color: #ffffff;
-}
 
 /* Ensure the right column itself is a flex container */
 .brands-col-right {
@@ -762,16 +759,6 @@
     background: var(--divider);
 }
 
-/* Updated Container for the Success View */
-.verification-status-container {
-    width: 100%;
-    max-width: 400px; /* Limits width to keep it looking like the screenshot */
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Centers children horizontally */
-    justify-content: center; /* Centers children vertically */
-    text-align: center;
-}
 
 /* Adjust the Success View wrapper */
 .identity-success-view {
@@ -792,21 +779,6 @@
     justify-content: center;
 }
 
-/* The "Continue" button should be centered and match the image width */
-.continue-settings-btn {
-    background: #000000;
-    color: #ffffff;
-    border: none;
-    padding: 16px 20px;
-    border-radius: 100px;
-    font-size: 1rem;
-    font-weight: 700;
-    width: 100%; /* Spans the width of the max-width container */
-    max-width: 340px; 
-    cursor: pointer;
-    transition: all 0.2s ease;
-    margin: 0 auto; /* Ensures it stays centered */
-}
 
 .success-status-text {
     color: #7ed321;
@@ -831,4 +803,121 @@
     object-fit: contain;
     /* Optional: filter to ensure it pops on dark backgrounds if it's a dark logo */
     filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.2));
+}
+
+/* Badge Styles */
+.green-check-badge, .red-cross-badge {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.success-logo-container {
+    position: relative; /* Required for absolute badges */
+    width: fit-content;
+    margin: 0 auto 20px auto;
+}
+
+/* Failed State Text */
+.failed-status-text {
+    color: #F44336;
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+/* Progress Label */
+.status-label {
+    font-size: 13px;
+    color: #666;
+    text-transform: capitalize;
+    margin-top: 8px;
+}
+
+/* Red Button */
+.button-red {
+    background-color: #F44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.button-red:hover {
+    background-color: #d32f2f;
+}
+
+/* --- Status Badge Base Styles --- */
+.status-badge {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeIn 0.4s ease-out;
+}
+
+/* --- Under Review Style (Yellow/Amber) --- */
+.status-badge.review {
+    background-color: #fffaf0;
+    color: #856404;
+    border-left: 4px solid #ffc107;
+}
+
+.status-badge.review::before {
+    content: "🕒";
+    font-size: 1.1rem;
+}
+
+/* --- Rejected Style (Red/Coral) --- */
+.status-badge.rejected {
+    background-color: #fff5f5;
+    color: #c53030;
+    border-left: 4px solid #f56565;
+}
+
+.status-badge.rejected::before {
+    content: "✕";
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+/* --- Verified Badge (Green) --- */
+.final-success-badge {
+    background-color: #f0fff4;
+    color: #2f855a;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border-left: 4px solid #48bb78;
+    display: inline-block;
+    animation: bounceIn 0.6s ease;
+}
+
+/* --- Helper for "Waiting" state text --- */
+.status-label {
+    color: #718096;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+/* --- Simple Animations --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.9); opacity: 0; }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); opacity: 1; }
 }

@@ -1,66 +1,140 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'; 
 import './styles/BrandCreation.css';
 
-const BrandCreation = ({ setActiveTab, existingBrand }) => {
-    // Determine if we are in "View Mode" (resuming) or "Create Mode"
-    const isReadOnly = !!existingBrand;
-
+const BrandCreation = ({ setActiveTab }) => {
     const navigate = useNavigate();
     
-    // --- AUTHENTICATION CHECK ---
+    const [token] = useState(localStorage.getItem('auth_token'));
     const [userId, setUserId] = useState(null);
-    const [token, setToken] = useState(null);
+    const [isLoading, setIsLoading] = useState(true); 
 
-    useEffect(() => {
-        const savedToken = localStorage.getItem('auth_token');
-        const savedUser = localStorage.getItem('user_info');
-
-        if (!savedToken || savedToken === 'null') {
-            navigate('/login');
-            return;
-        }
-
-        setToken(savedToken);
-
-        if (savedUser) {
-            const user = JSON.parse(savedUser);
-            setUserId(user.id);
-        }
-    }, [navigate]);
-
-    // --- Form State ---
-    // Initialize with existingBrand data if available
     const [formData, setFormData] = useState({
-        brandName: existingBrand?.brand_name || '',
-        domain: existingBrand?.website_url || '',
+        brandName: '',
+        domain: '',
         lightLogo: null,
         darkLogo: null
     });
 
     const [error, setError] = useState('');
+    const [verifyingBrand, setVerifyingBrand] = useState(null); 
+    const [isVerifying, setIsVerifying] = useState(false);
     
-    // Initialize verifyingBrand with existingBrand to show progress immediately
-    const [verifyingBrand, setVerifyingBrand] = useState(existingBrand || null); 
-    const [isVerifying, setIsVerifying] = useState(!!existingBrand);
+    const [visualSeconds, setVisualSeconds] = useState(0);
+    const [visualMetaSeconds, setVisualMetaSeconds] = useState(0); 
+    const totalDuration = 120; 
 
-    useEffect(() => {
-        if (existingBrand) {
-            setVerifyingBrand(existingBrand);
+    const fetchActiveBrand = useCallback(async (authToken, isPolling = false, specificId = null) => {
+        if (!isPolling) setIsLoading(true);
+        try {
+            // Decide which URL to use
+            const url = specificId 
+                ? `${process.env.REACT_APP_API_URL}/brands/${specificId}` // Get specific brand
+                : `${process.env.REACT_APP_API_URL}/brands/pending`;      // Look for latest pending
+                
+            const response = await fetch(url, {
+                headers: { 
+                    'Authorization': `Bearer ${authToken}`,
+                    'Accept': 'application/json'
+                }
+            });
             
-            // If the backend says it's verified, make sure our local 
-            // form data also reflects the latest names/URLs
-            setFormData(prev => ({
-                ...prev,
-                brandName: existingBrand.brand_name || prev.brandName,
-                domain: existingBrand.website_url || prev.domain
-            }));
-        }
-    }, [existingBrand]); // This triggers every time Dashboard's polling finishes
+            const data = await response.json();
+            const brandData = data.brand;
 
-    // --- Handlers ---
+            if (response.ok && brandData) {
+                setVerifyingBrand(brandData);
+                setIsVerifying(true); 
+                
+                // ... (keep your existing timer sync logic here) ...
+                
+            } else if (response.ok && !brandData && !isPolling) {
+                // No brand found at all, reset UI to "Create" mode
+                setVerifyingBrand(null);
+                setIsVerifying(false);
+                // Sync Identity Timer to DB Percentage
+                const dbIdProgress = parseInt(brandData.identity_progress) || 0;
+                setVisualSeconds(currentSecs => {
+                    const dbSecs = Math.round((dbIdProgress / 100) * totalDuration);
+                    // If DB is ahead of our local visual timer, jump to DB value
+                    return dbSecs > currentSecs ? dbSecs : currentSecs;
+                });
+
+                // Sync Meta Timer to DB Percentage
+                const dbMetaProgress = parseInt(brandData.meta_progress) || 0;
+                setVisualMetaSeconds(currentSecs => {
+                    const dbSecs = Math.round((dbMetaProgress / 100) * totalDuration);
+                    return dbSecs > currentSecs ? dbSecs : currentSecs;
+                });
+            }
+        } catch (err) {
+            console.error("Fetch error:", err);
+        } finally {
+            if (!isPolling) setIsLoading(false);
+        }
+    }, [totalDuration]);
+
+   useEffect(() => {
+        const savedToken = localStorage.getItem('auth_token');
+        const savedUser = localStorage.getItem('user_info');
+
+        if (!savedToken) {
+            navigate('/login');
+            return;
+        }
+
+        // Initial Load: Look for any pending brand
+        if (savedUser) {
+            fetchActiveBrand(savedToken);
+        }
+
+        const pollId = setInterval(() => {
+            // Look at the current state - if we already have a brand ID, 
+            // poll THAT specific ID instead of the general "pending" list.
+            const currentBrandId = verifyingBrand?.id; 
+            fetchActiveBrand(savedToken, true, currentBrandId);
+        }, 10000);
+
+        return () => clearInterval(pollId);
+        // Add verifyingBrand?.id to dependencies so the interval can "see" the ID change
+    }, [navigate, fetchActiveBrand, verifyingBrand?.id]);
+
+    // --- 3. IMPROVED DERIVED STATES ---
+    const idStatus = verifyingBrand?.identity_status?.toLowerCase() || 'pending';
+    const metaStatus = verifyingBrand?.meta_status?.toLowerCase() || 'pending';
+
+    const isIdVerified = idStatus === 'verified';
+    const isIdInProgress = idStatus === 'inprogress';
+    const isIdUnderReview = idStatus === 'under review';
+    const isIdRejected = idStatus === 'rejected';
+
+    const isMetaVerified = metaStatus === 'verified';
+    const isMetaInProgress = metaStatus === 'inprogress';
+    const isMetaUnderReview = metaStatus === 'under review';
+    const isMetaRejected = metaStatus === 'rejected';
+
+    const isReadOnly = !!verifyingBrand; 
+
+    const identityNotes = verifyingBrand?.identity_verification_notes;
+    const websiteNotes = verifyingBrand?.meta_verification_notes;
+
+    const identityProgress = isIdVerified 
+    ? 100 
+    : Math.max(
+        Math.min(Math.round((visualSeconds / totalDuration) * 100), 99),
+        verifyingBrand?.identity_progress || 0 // Always show at least what the DB says
+    );
+
+    const websiteProgress = isMetaVerified 
+        ? 100 
+        : Math.max(
+            Math.min(Math.round((visualMetaSeconds / totalDuration) * 100), 99),
+            verifyingBrand?.meta_progress || 0
+        );
+
+    // --- 4. HANDLERS ---
     const handleInputChange = (e) => {
-        if (isReadOnly) return; // Prevent typing if read-only
+        if (isReadOnly) return;
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
         if (error) setError('');
@@ -77,20 +151,10 @@ const BrandCreation = ({ setActiveTab, existingBrand }) => {
 
     const handleContinue = async () => {
         const { brandName, domain, lightLogo, darkLogo } = formData;
-        
-        const savedUser = localStorage.getItem('user_info');
-        let user = null;
-        try { user = savedUser ? JSON.parse(savedUser) : null; } catch (e) {}
-
-        if (!user || !user.id) {
-            setError('Your session has expired. Please log in again.');
+        if (!brandName.trim() || !domain.trim() || !lightLogo || !darkLogo) {
+            setError('Please complete all fields and uploads.');
             return;
         }
-
-        if (!brandName.trim()) { setError('Please enter your Brand Name.'); return; }
-        if (!domain.trim() || !domain.includes('.')) { setError('Please enter a valid website domain.'); return; }
-        if (!lightLogo) { setError('Please upload a Light Mode logo.'); return; }
-        if (!darkLogo) { setError('Please upload a Dark Mode logo.'); return; }
 
         setError('');
         setIsVerifying(true); 
@@ -100,7 +164,7 @@ const BrandCreation = ({ setActiveTab, existingBrand }) => {
         formDataToSend.append('website_url', domain);
         formDataToSend.append('light_logo', lightLogo);
         formDataToSend.append('dark_logo', darkLogo);
-        formDataToSend.append('user_id', user.id);
+        formDataToSend.append('user_id', userId);
 
         try {
             const response = await fetch(`${process.env.REACT_APP_API_URL}/brands`, {
@@ -111,15 +175,11 @@ const BrandCreation = ({ setActiveTab, existingBrand }) => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-            
             const data = await response.json();
-
             if (response.ok) {
                 setVerifyingBrand(data.brand); 
-                setIsVerifying(true); 
             } else {
-                const serverError = data.main_message || (data.errors ? Object.values(data.errors)[0][0] : 'Upload failed.');
-                setError(serverError);
+                setError(data.main_message || 'Upload failed.');
                 setIsVerifying(false);
             }
         } catch (err) {
@@ -128,182 +188,197 @@ const BrandCreation = ({ setActiveTab, existingBrand }) => {
         }
     };
 
-    const isIdentityVerified = verifyingBrand?.identity_status === 'verified';
-    
+    // --- 5. UPDATED PROGRESS TIMER EFFECT ---
+    useEffect(() => {
+        let timer;
+        if (isVerifying) {
+            timer = setInterval(() => {
+                // Identity Tick: only if inprogress
+                if (isIdInProgress && visualSeconds < totalDuration) {
+                    setVisualSeconds(prev => prev + 1);
+                }
+                // Meta Tick: only if inprogress (implies identity is likely verified)
+                if (isMetaInProgress && visualMetaSeconds < totalDuration) {
+                    setVisualMetaSeconds(prev => prev + 1);
+                }
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [isVerifying, isIdInProgress, isMetaInProgress, visualSeconds, visualMetaSeconds]);
+
+    if (isLoading) return <div className="brands-container">Loading brand data...</div>;
 
     return (
-        <div className="brands-container animate__animated animate__fadeIn">
-            
-            {/* --- LEFT COLUMN: FORM OR META INSTRUCTIONS --- */}
-            <div className="brands-col-left">
-                <button className="back-to-dashboard-btn" onClick={() => setActiveTab('Start Now')}>
-                    ← Back to Dashboard
-                </button>
-
-                {!isIdentityVerified ? (
-                    /* STAGE 1 UI: THE FORM */
-                    <div className="setup-stage">
-                        <h3 className="brands-title">{isReadOnly ? 'Brand Verification' : 'Create Your Brand'}</h3>
-                        <div className="brands-form-wrapper">
-                    {error && <div className="validation-error-msg">{error}</div>}
-
-                    <div className="brands-input-group">
-                        <input 
-                            name="brandName"
-                            type="text" 
-                            className="brands-main-input brand-name-placeholder" 
-                            placeholder="Brand name (we replace this with your logo)" 
-                            onChange={handleInputChange}
-                        />
-                        <div className="brands-tooltip-wrapper">
-                            <span className="brands-info-circle">ⓘ</span>
-                            <span className="tooltip-text">Used for store profile identification.</span>
-                        </div>
-                    </div>
-
-                    <div className="brands-input-group">
-                        <input 
-                            name="domain"
-                            type="text" 
-                            className="brands-main-input" 
-                            placeholder="Enter your brand website domain name" 
-                            onChange={handleInputChange}
-                        />
-                        <div className="brands-tooltip-wrapper">
-                            <span className="brands-info-circle">ⓘ</span>
-                            <span className="tooltip-text">Example: brandbased.io</span>
-                        </div>
-                    </div>
-
-                    <div className="brands-upload-container">
-                        <p className="brands-upload-text">Upload your brand logo</p>
-                        <div className="brands-upload-grid">
-                            
-                            {/* Light Mode Upload */}
-                            <label className="brands-upload-item">
-                                <input type="file" accept=".svg,.eps" hidden onChange={(e) => handleFileChange(e, 'lightLogo')} />
-                                <div className={`brands-upload-box light-box ${formData.lightLogo ? 'uploaded' : ''}`}>
-                                    <div className="brands-plus-icon">{formData.lightLogo ? '✓' : '+'}</div>
-                                    <span className="brands-format-text">{formData.lightLogo ? formData.lightLogo.name : 'SVG or EPS format'}</span>
-                                </div>
-                                <span className="brands-label-text">Light Mode Logo</span>
-                            </label>
-
-                            {/* Dark Mode Upload */}
-                            <label className="brands-upload-item">
-                                <input type="file" accept=".svg,.eps" hidden onChange={(e) => handleFileChange(e, 'darkLogo')} />
-                                <div className={`brands-upload-box dark-box ${formData.darkLogo ? 'uploaded' : ''}`}>
-                                    <div className="brands-plus-icon">{formData.darkLogo ? '✓' : '+'}</div>
-                                    <span className="brands-format-text">{formData.darkLogo ? formData.darkLogo.name : 'SVG or EPS format'}</span>
-                                </div>
-                                <span className="brands-label-text">Dark Mode Logo</span>
-                                <div className="brands-tooltip-wrapper upload-info">
-                                    <span className="brands-info-circle">ⓘ</span>
-                                    <span className="tooltip-text">Ensure high contrast for dark backgrounds.</span>
-                                </div>
-                            </label>
-
-                        </div>
-                    </div>
-
-                    <button className="brands-btn-continue" onClick={handleContinue}>Continue</button>
-                </div>
-                    </div>
-                ) : (
-                    /* STAGE 2 UI: WEBSITE VERIFICATION (Hides the form) */
-                    <div className="verification-panel animate__animated animate__fadeIn">
-                        <h2 className="panel-brand-header">Your Brand</h2>
-                        <h3 className="panel-main-title">You're almost there!</h3>
-                        
-                        <p className="panel-description">
-                            Please paste your official BrandBased verification meta tag and runtime load into the <code>&lt;head&gt;</code> of your website to complete the brand verification process. 
-                            <span className="info-badge">i</span>
-                        </p>
-
-                        <div className="code-block-container">
-                            <div className="code-block-header">
-                                <span className="code-lang">🔗 HTML</span>
-                                <button 
-                                    className="copy-btn-minimal" 
-                                    onClick={() => navigator.clipboard.writeText(`<meta name="brandbased-official" content="BB-VERIFIED-${verifyingBrand.meta_verification_code}">`)}
-                                >
-                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
-                                </button>
-                            </div>
-                            <div className="code-block-body">
-                                <code className="code-comment">{``}</code>
-                                <br />
-                                <code className="code-tag">
-                                    {`<meta name="brandbased-official" content="BB-VERIFIED-${verifyingBrand.meta_verification_code}">`}
-                                </code>
-                            </div>
-                        </div>
-
-                        <p className="panel-footer-text">
-                            After adding your BrandBased verification meta tag and runtime loader to your site's <code>&lt;head&gt;</code>, click Sync to finish verification.
-                        </p>
-
-                        <button className="sync-action-btn" onClick={() => console.log("Syncing...")}>
-                            Sync
-                        </button>
-                    </div>
-                )}
-            </div>
-
-            {/* --- RIGHT COLUMN: STATUS AND PROGRESS --- */}
-            <div className="brands-col-right">
-                <div className="vertical-divider"></div>
+        <div className="brands-page-wrapper" style={{display: 'flex', justifyContent: 'center', alignItems: 'top', minHeight: '80vh' }}>
+            <div className="brands-container animate__animated animate__fadeIn" style={{ display: 'flex', width: '100%', margin: '0 auto', gap: '40px' }}>
                 
-                <div className="verification-status-container">
-                    {!isIdentityVerified ? (
-                        /* Standard Progress View */
-                        <div className="progress-loading-view">
-                            <h3 className="success-header">Brand Identity Verification </h3>
-                            <div className="logo-preview-wrapper">
-                                <img src={verifyingBrand?.logo_dark_url} alt="Brand" />
-                            </div>
-                            <div className="progress-bar-area">
-                                <div className="progress-labels">
-                                    <span>Verifying Identity</span>
-                                    <span>{verifyingBrand?.identity_progress || 0}%</span>
+                {/* LEFT COLUMN */}
+                <div className="brands-col-left" style={{ flex: 1 }}>
+                    <button className="back-to-dashboard-btn" onClick={() => setActiveTab('Start Now')}>
+                        ← Back to Dashboard
+                    </button>
+
+                    {isIdVerified ? (
+                        <div className="verification-panel animate__animated animate__fadeIn">
+                            <h2 className="panel-brand-header">{verifyingBrand?.brand_name}</h2>
+                            <h3 className="panel-main-title">Identity Verified!</h3>
+                            
+                            <p className="panel-description">
+                                Please paste your verification meta tag into the <code>&lt;head&gt;</code> of your website.
+                            </p>
+                            
+                            <div className="code-block-container">
+                                <div className="code-block-header">
+                                    <span className="code-lang">🔗 HTML</span>
+                                    <button className="copy-btn-minimal" onClick={() => navigator.clipboard.writeText(`<meta name="brandbased-official" content="BB-VERIFIED-${verifyingBrand.meta_verification_code}">`)}>
+                                        Copy
+                                    </button>
                                 </div>
-                                <div className="progress-track">
-                                    <div 
-                                        className="progress-fill" 
-                                        style={{ width: `${verifyingBrand?.identity_progress || 0}%` }}
-                                    ></div>
+                                <div className="code-block-body">
+                                    <code className="code-tag">{`<meta name="brandbased-official" content="BB-VERIFIED-${verifyingBrand.meta_verification_code}">`}</code>
                                 </div>
                             </div>
+
+                            <button className="sync-action-btn button-blue" onClick={() => fetchActiveBrand(token)}>
+                                Sync Website Status
+                            </button>
+
+                            {/* WEBSITE META PROGRESS LOGIC */}
+                            <div className="progress-section" style={{ marginTop: '30px' }}>
+                                {isMetaInProgress ? (
+                                    <>
+                                        <div className="progress-bar-background">
+                                            <div className="progress-bar-fill" style={{ width: `${websiteProgress}%`, backgroundColor: '#4a90e2', transition: 'width 1s linear' }}>
+                                                <span className="progress-text">{websiteProgress}%</span>
+                                            </div>
+                                        </div>
+                                        <p className="status-label" style={{ marginTop: '10px' }}>Scanning website for meta tag...</p>
+                                    </>
+                                ) : isMetaUnderReview ? (
+                                    <div className="status-badge review">Under Review: Analyzing Meta Tag...</div>
+                                ) : isMetaRejected ? (
+                                    <div className="status-badge rejected">Verification Failed: {websiteNotes || 'Tag not found'}</div>
+                                ) : isMetaVerified ? (
+                                    <div className="final-success-badge" style={{ color: 'green', fontWeight: 'bold' }}>
+                                        ✓ Website Fully Verified
+                                    </div>
+                                ) : (
+                                    <p className="status-label">Waiting to start website scan...</p>
+                                )}
+                            </div>
+
+                             {websiteNotes && !isMetaRejected && (
+                                <div className="verification-notes-container">
+                                    <p className="status-label">{websiteNotes}</p>
+                                </div>
+                            )}
                         </div>
                     ) : (
-                        /* SUCCESS VIEW (Matching your image) */
-                        <div className="identity-success-view animate__animated animate__zoomIn">
-                            <h3 className="success-header">Brand Identity Verification</h3>
-                            
-                            <div className="success-logo-container">
-                                <img 
-                                    src={verifyingBrand?.logo_dark_url} 
-                                    className="main-success-logo" 
-                                    alt="Verified Logo" 
-                                />
-                                <div className="green-check-badge">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="#4CAF50" strokeWidth="4">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
+                        <div className="setup-stage">
+                            <h3 className="brands-title">{isReadOnly ? 'Brand Verification' : 'Create Your Brand'}</h3>
+                            <div className="brands-form-wrapper">
+                                {error && <div className="validation-error-msg">{error}</div>}
+
+                                <div className="brands-input-group">
+                                    <input 
+                                        name="brandName"
+                                        type="text" 
+                                        className="brands-main-input" 
+                                        placeholder="Brand name" 
+                                        value={formData.brandName} 
+                                        disabled={isReadOnly}
+                                        onChange={handleInputChange}
+                                    />
                                 </div>
+
+                                <div className="brands-input-group">
+                                    <input 
+                                        name="domain"
+                                        type="text" 
+                                        className="brands-main-input" 
+                                        placeholder="Enter your brand website domain" 
+                                        value={formData.domain}
+                                        disabled={isReadOnly}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+
+                                <div className="brands-upload-container">
+                                    <p className="brands-upload-text">Upload your brand logo</p>
+                                    <div className="brands-upload-grid">
+                                        <label className={`brands-upload-item ${isReadOnly ? 'disabled-label' : ''}`}>
+                                            <input type="file" accept=".svg,.eps" hidden disabled={isReadOnly} onChange={(e) => handleFileChange(e, 'lightLogo')} />
+                                            <div className={`brands-upload-box light-box ${formData.lightLogo || verifyingBrand?.logo_light_url ? 'uploaded' : ''}`}>
+                                                <div className="brands-plus-icon">{(formData.lightLogo || verifyingBrand?.logo_light_url) ? '✓' : '+'}</div>
+                                                <span className="brands-format-text">{formData.lightLogo?.name || (verifyingBrand?.logo_light_url ? 'Logo Saved' : 'Light Logo (SVG/EPS)')}</span>
+                                            </div>
+                                        </label>
+
+                                        <label className={`brands-upload-item ${isReadOnly ? 'disabled-label' : ''}`}>
+                                            <input type="file" accept=".svg,.eps" hidden disabled={isReadOnly} onChange={(e) => handleFileChange(e, 'darkLogo')} />
+                                            <div className={`brands-upload-box dark-box ${formData.darkLogo || verifyingBrand?.logo_dark_url ? 'uploaded' : ''}`}>
+                                                <div className="brands-plus-icon">{(formData.darkLogo || verifyingBrand?.logo_dark_url) ? '✓' : '+'}</div>
+                                                <span className="brands-format-text">{formData.darkLogo?.name || (verifyingBrand?.logo_dark_url ? 'Logo Saved' : 'Dark Logo (SVG/EPS)')}</span>
+                                            </div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                {!isReadOnly && <button className="brands-btn-continue" onClick={handleContinue}>Continue</button>}
                             </div>
-
-                            <p className="success-status-text">Your brand has been verified!</p>
-
-                            <button 
-                                className="continue-settings-btn" 
-                                onClick={() => setActiveTab('Brands')}
-                            >
-                                Continue to Brand Settings
-                            </button>
                         </div>
                     )}
                 </div>
+
+                {/* RIGHT COLUMN - IDENTITY PROGRESS */}
+                {(verifyingBrand || isVerifying) && (
+                    <div className="brands-col-right" style={{ flex: 1 }}>
+                        <div className="vertical-divider"></div>
+                        <div className="verification-status-container" style={{ paddingLeft: '40px' }}>
+                            <h3 className="success-header">Brand Identity Verification</h3>
+                            
+                            <div className="success-logo-container">
+                                {verifyingBrand?.logo_dark_url && (
+                                    <img src={verifyingBrand.logo_dark_url} className="main-success-logo" alt="Brand Logo" />
+                                )}
+                                {isIdVerified && <div className="green-check-badge">✓</div>}
+                            </div>
+
+                            <div className="progress-section">
+                                {isIdInProgress ? (
+                                    <>
+                                        <div className="progress-bar-background">
+                                            <div className="progress-bar-fill" style={{ width: `${identityProgress}%`, transition: 'width 1s linear' }}>
+                                                <span className="progress-text">{identityProgress}%</span>
+                                            </div>
+                                        </div>
+                                        <p className="status-label">Verifying Identity...</p>
+                                    </>
+                                ) : isIdUnderReview ? (
+                                    <div className="status-badge review">Under Review: Please contact support.</div>
+                                ) : isIdRejected ? (
+                                    <div className="status-badge rejected">Identity Rejected: Please contact support.</div>
+                                ) : isIdVerified ? (
+                                    <div className="verified-details-section">
+                                        <p className="status-label verified-text" style={{fontSize: '2.0rem', color: 'green', fontWeight: 'bold' }}>
+                                            Identity Verified
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <p className="status-label">Waiting to process identity...</p>
+                                )}
+                            </div>
+
+                            {identityNotes && (
+                                <div className="identity-notes-box" style={{marginTop: '15px'}}>
+                                    <p className="status-label" style={{ fontSize: '0.9rem', color: '#555', lineHeight: '1.4' }}>
+                                        <strong>Note:</strong> {identityNotes}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     );

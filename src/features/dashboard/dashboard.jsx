@@ -1,4 +1,4 @@
-import React, { useState, useEffect,useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './styles/dashboard.css';
 import Brands from '../../components/BrandCreation';
@@ -25,45 +25,6 @@ const Dashboard = () => {
     const [isShining, setIsShining] = useState(false);
 
     
-    const [brands, setBrands] = useState([]); // This holds ALL user brands
-    const [selectedBrand, setSelectedBrand] = useState(null); // This holds the one being viewed
-    const fetchBrands = useCallback(async () => {
-            try {
-                const token = localStorage.getItem('auth_token');
-                const response = await fetch(`${process.env.REACT_APP_API_URL}/user/brands`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    setBrands(data.brands || []);
-                    console.log("Brands Refreshed:", data.brands);
-                }
-            } catch (err) {
-                console.error("Polling error:", err);
-            }
-        }, []);
-
-        useEffect(() => {
-            fetchBrands();
-        }, [fetchBrands]);
-
-        useEffect(() => {
-            const interval = setInterval(() => {
-                fetchBrands();
-            }, 5000); 
-            return () => clearInterval(interval);
-        }, [fetchBrands]);
-
-        // THE SYNC BRIDGE: Updates the selected brand view when polling finds changes
-        useEffect(() => {
-            if (selectedBrand) {
-                const updated = brands.find(b => b.id === selectedBrand.id);
-                if (updated) {
-                    setSelectedBrand(updated);
-                }
-            }
-        }, [brands]);
-
     
 
     const applyTheme = (isLight) => {
@@ -81,7 +42,7 @@ const Dashboard = () => {
     };
 
     const handleTabChange = (tabLabel, brandData = null) => {
-        setSelectedBrand(brandData); 
+        
         setActiveTab(tabLabel);
     };
 
@@ -103,10 +64,8 @@ const Dashboard = () => {
     // This dynamically renders the component with the LATEST selectedBrand state
     const getActiveComponent = () => {
         switch (activeTab) {
-            case 'Start Now':
-                return <DashboardHome brands={brands} setActiveTab={handleTabChange} />;
-            case 'Brand Creation':
-                return <BrandCreation existingBrand={selectedBrand} setActiveTab={handleTabChange} />;
+            case 'Start Now': return <DashboardHome setActiveTab={handleTabChange} />;
+            case 'Brand Creation': return <BrandCreation setActiveTab={handleTabChange} />;
             case 'Brands': return <Brands />;
             case 'Platforms': return <Platforms />;
             case 'Products': return <Products />;
@@ -116,7 +75,7 @@ const Dashboard = () => {
             case 'Brand Settings': return <Settings />;
             case 'Campaigns': return <Campaigns />;
             case 'Metrics': return <Metrics />;
-            default: return <DashboardHome brands={brands} setActiveTab={handleTabChange} />;
+            default: return <DashboardHome setActiveTab={handleTabChange} />;
         }
     };
 
@@ -146,7 +105,7 @@ const Dashboard = () => {
                 <div className="account-section">
                     <div id="account-popup">
                         <div className="theme-toggle-container">
-                            <span className="theme-label">{isDarkMode ? "Theme Dark" : "Theme Light"} tested</span>
+                            <span className="theme-label">{isDarkMode ? "Theme Dark" : "Theme Light"}</span>
                             <label className="theme-button">
                                 <input 
                                     type="checkbox" 

@@ -2976,7 +2976,7 @@ body.light-mode #account-popup {
 .dynamic-content-scroll-area {
     /* 1. Set the exact height and width to prevent growth */
     /* (100vh - 140px) - 80px = (100vh - 220px) */
-    height: calc(100vh - 220px); 
+    
     
     /* 2. Positioning */
     
@@ -2989,6 +2989,13 @@ body.light-mode #account-popup {
     box-sizing: border-box;
     padding-right: 15px; 
 }
+@media(max-width:840px) {
+ 
+    .dynamic-content-scroll-area{
+         height: calc(100vh - 120px)!important; 
+     }   
+}
+
 /* --- Premium Scrollbar --- */
 .dynamic-content-scroll-area::-webkit-scrollbar {
     width: 6px;
