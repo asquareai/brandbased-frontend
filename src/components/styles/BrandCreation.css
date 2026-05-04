@@ -23,6 +23,8 @@
 .brands-form-wrapper {
     width: 100%;
     max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* --- Input Styling --- */
@@ -906,7 +908,6 @@
 /* --- Helper for "Waiting" state text --- */
 .status-label {
     color: #718096;
-    font-style: italic;
     font-size: 0.9rem;
 }
 

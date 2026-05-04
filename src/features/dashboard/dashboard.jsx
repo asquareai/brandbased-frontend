@@ -89,18 +89,22 @@ const Dashboard = () => {
                     <img className="bb-typefaceImgMobile" src={isDarkMode ? "/assets/Brandbased-icon-white.svg" : "/assets/Brandbased-icon.svg"} alt="Logo" />
                 </div>
                 
-                <div className="header-logo-desktop animate__animated animate__fadeInLeft" id="header-icon-desktop">
-                    <img 
-                        src={isDarkMode ? "/assets/Brandbased-icon-white.svg" : "/assets/Brandbased-icon.svg"} 
-                        className={`bb-typefaceImgBIcon ${isShining ? 'shine-double' : ''}`} 
-                        alt="B Icon" 
-                        style={{ width: '40px', height: '40px' }} 
-                    />
-                </div>
+             <div className="header-logo-desktop animate__animated animate__fadeInLeft" id="header-icon-desktop">
+                <img 
+                    src={isDarkMode ? "/assets/Brandbased-icon-white.svg" : "/assets/Brandbased-icon.svg"} 
+                    className={`bb-typefaceImgBIcon ${isShining ? 'shine-double' : ''}`} 
+                    alt="B Icon" 
+                    style={{ width: '40px', height: '40px' }} 
+                />
+            </div>
 
-                <div className="bb-typeface animate__animated animate__slideInDown">
-                    <img className="bb-typefaceImg" src={isDarkMode ? "/assets/Brandbased-Typeface-white.svg" : "/assets/Brandbased-Typeface.svg"} alt="BrandBased" />
-                </div>
+            <div className="bb-typeface animate__animated animate__slideInDown">
+                <img 
+                    className="bb-typefaceImg" 
+                    src={isDarkMode ? "/assets/Brandbased-Typeface-white.svg" : "/assets/Brandbased-Typeface.svg"} 
+                    alt="BrandBased" 
+                />
+            </div>
 
                 <div className="account-section">
                     <div id="account-popup">
